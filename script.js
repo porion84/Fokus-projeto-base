@@ -10,8 +10,14 @@ const duracaoFoco = 1500;
 const duracaoDescansoCurto = 300; 
 const duracaoDescansoLongo = 900;
 const botoes = document.querySelectorAll('.app__card-button');
+const startPauseBt = document.querySelector('#start-pause')
+
 const musicaFocoInput = document.querySelector('#alternar-musica')
 const musica = new Audio('/sons/luna-rise-part-one.mp3')
+
+let tempoDecorridoEmSegundos = 5
+let intervaloId = null
+
 musica.loop = true;
 
 musicaFocoInput.addEventListener('change', () => {
@@ -60,4 +66,30 @@ function alterarContexto(contexto) {
         default:
             break;
     }
+}
+
+const contagemRegressiva = () => {
+    if(tempoDecorridoEmSegundos <= 0){
+        zerar()
+        alert('Tempo finalizado!')
+        return
+    }
+    tempoDecorridoEmSegundos -= 1
+    console.log('Temporizador: ' + tempoDecorridoEmSegundos)
+
+}
+
+startPauseBt.addEventListener('click', iniciarOuPausar)
+
+function iniciarOuPausar() {
+    if(intervaloId){
+        zerar()
+        return
+    }
+    intervaloId = setInterval(contagemRegressiva, 1000)
+}
+
+function zerar() {
+    clearInterval(intervaloId)
+    intervaloId = null
 }
